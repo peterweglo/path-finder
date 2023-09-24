@@ -1,0 +1,71 @@
+.finder-page {
+  display: none;
+
+  &.active {
+    display: block;
+  }
+
+  .subtitle {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+
+  .game-field {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    display: flex;
+    width: 500px;
+    flex-wrap: wrap;
+    z-index: 2;
+
+    .square {
+      width: 50px;
+      height: 50px;
+      border: 2px $color-light solid;
+      cursor: pointer;
+    }
+
+    .square.clicked {
+      background-color: $color-path;
+    }
+
+    .square.clicked.start {
+      background-color: green;
+    }
+
+    .square.clicked.end {
+      background-color: red;
+    }
+
+    .square.shortest {
+      background-color: aqua;
+    }
+  }
+
+  .btn {
+    position: absolute;
+    bottom: -400px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+
+    z-index: 2;
+
+    button {
+      padding: 20px 40px;
+      text-transform: uppercase;
+      font-family: $font-family-main;
+      font-size: 24px;
+      background-color: $color-path;
+      color: $color-light;
+      border: none;
+      cursor: pointer;
+    }
+  }
+}

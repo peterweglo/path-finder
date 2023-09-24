@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Path Finder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700;900&display=swap"
+        rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header>
+        <nav><a href="#about">About</a><a href="#finder">Finder</a></nav>
+        <section class="splash">
+            <h1>Pathfinder</h1>
+            <h2>For travellers</h2>
+        </section>
+    </header>
+    <div class="container">
+        <section class="about-page" id="about">
+            <div class="image-1" data-aos="fade-right">
+                <div class="image-text-1">
+                    <h3>Plan your journeys</h3>
+                    <p>Pick attractions and book hotels</p>
+                </div>
+            </div>
+            <div class="image-2" data-aos="fade-left">
+                <div class="image-text-2">
+                    <h3>Minimalize boredom</h3>
+                    <p>Pick routes that are short and attractive</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="finder-page" id="finder">
+            <div class="subtitle">
+                <h3 class="pathfinder-subtitle">Draw routes</h3>
+            </div>
+            <div class="game-field"></div>
+            <div class="btn"><button type="button">Finish drawning</button></div>
+        </section>
+    </div>
+    <section class="background">
+        <footer>
+            <p>All rights reserved</p>
+        </footer>
+    </section>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
+    <script src="js/script.js" type="module"></script>
+</body>
+
+</html>
