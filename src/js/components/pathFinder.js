@@ -140,6 +140,9 @@ class PathFinder {
         thisPathFinder.dom.subtitle.textContent = 'The best route is...';
         thisPathFinder.dom.btn.textContent = 'statr again';
         thisPathFinder.findShortestPath();
+        thisPathFinder.flag = 4;
+      } else if (thisPathFinder.flag === 4) {
+        thisPathFinder.reset();
       }
     });
   }
@@ -205,6 +208,16 @@ class PathFinder {
     }
 
     alert('The shortest path not found');
+  }
+  reset() {
+    const thisPathFinder = this;
+    thisPathFinder.flag = 0;
+    thisPathFinder.graph = {};
+    for (let square of thisPathFinder.dom.squares) {
+      square.className = 'square';
+    }
+    thisPathFinder.dom.subtitle.textContent = 'Draw routes';
+    thisPathFinder.dom.btn.textContent = 'Finish drawning';
   }
 }
 export default PathFinder;
