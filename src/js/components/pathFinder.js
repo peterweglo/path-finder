@@ -159,6 +159,7 @@ class PathFinder {
     for (let square of thisPathFinder.dom.clickedSquares) {
       square.addEventListener('click', function () {
         const clickedElement = this;
+        console.log('thisPathFinder.flag', thisPathFinder.flag);
         if (thisPathFinder.flag === 1) {
           clickedElement.classList.add('start');
           const startIndexRow = parseInt(square.getAttribute('data-row'));
@@ -171,7 +172,7 @@ class PathFinder {
           const endIndexRow = parseInt(square.getAttribute('data-row'));
           const endIndexCol = parseInt(square.getAttribute('data-col'));
           thisPathFinder.endPoint = `${endIndexRow}-${endIndexCol}`;
-          console.log('startPoint', thisPathFinder.endPoint);
+          console.log('endPoint', thisPathFinder.endPoint);
           thisPathFinder.flag = 3;
         }
       });
@@ -180,7 +181,7 @@ class PathFinder {
 
   findShortestPath() {
     const thisPathFinder = this;
-
+    thisPathFinder.flag = 4;
     const queue = [{ node: thisPathFinder.startPoint, path: [] }];
     console.log('queue', queue);
     const visited = new Set();
@@ -211,18 +212,19 @@ class PathFinder {
           }
         }
       }
-      thisPathFinder.flag = 4;
     }
 
     alert('The shortest path not found');
-    thisPathFinder.flag = 4;
   }
   reset() {
     const thisPathFinder = this;
     thisPathFinder.flag = 0;
     thisPathFinder.graph = {};
+    thisPathFinder.startPoint = '';
+    thisPathFinder.endPoint = '';
+
     for (let square of thisPathFinder.dom.squares) {
-      square.className = 'square';
+      square.classList.remove('clicked', 'shortest', 'start', 'end');
     }
     thisPathFinder.dom.subtitle.textContent = 'Draw routes';
     thisPathFinder.dom.btn.textContent = 'Finish drawning';
