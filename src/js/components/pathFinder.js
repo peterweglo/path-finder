@@ -27,6 +27,7 @@ class PathFinder {
     const thisPathFinder = this;
     thisPathFinder.dom = {};
     thisPathFinder.dom.wrapper = document.querySelector('.game-field');
+    thisPathFinder.dom.wrapper.innerHTML = '';
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < cols; col++) {
         let square = document.createElement('div');
@@ -220,12 +221,12 @@ class PathFinder {
     const thisPathFinder = this;
     thisPathFinder.flag = 0;
     thisPathFinder.graph = {};
-    thisPathFinder.startPoint = '';
-    thisPathFinder.endPoint = '';
+    thisPathFinder.startPoint = null;
+    thisPathFinder.endPoint = null;
+    thisPathFinder.renderGrid();
+    thisPathFinder.getElements();
+    thisPathFinder.chooseSquares();
 
-    for (let square of thisPathFinder.dom.squares) {
-      square.classList.remove('clicked', 'shortest', 'start', 'end');
-    }
     thisPathFinder.dom.subtitle.textContent = 'Draw routes';
     thisPathFinder.dom.btn.textContent = 'Finish drawning';
   }
