@@ -126,6 +126,13 @@ class PathFinder {
     const thisPathFinder = this;
     thisPathFinder.dom.btn.addEventListener('click', function () {
       if (thisPathFinder.flag === 0) {
+        const clickedSquares =
+          thisPathFinder.dom.wrapper.querySelectorAll('.square.clicked');
+
+        if (clickedSquares.length < 2) {
+          alert('Choose at least dwo squares');
+          return;
+        }
         thisPathFinder.flag = 1;
         thisPathFinder.dom.subtitle.textContent = 'Pick start and finish';
         thisPathFinder.dom.btn.textContent = 'compute';
@@ -140,7 +147,6 @@ class PathFinder {
         thisPathFinder.dom.subtitle.textContent = 'The best route is...';
         thisPathFinder.dom.btn.textContent = 'statr again';
         thisPathFinder.findShortestPath();
-        thisPathFinder.flag = 4;
       } else if (thisPathFinder.flag === 4) {
         thisPathFinder.reset();
       }
@@ -205,9 +211,11 @@ class PathFinder {
           }
         }
       }
+      thisPathFinder.flag = 4;
     }
 
     alert('The shortest path not found');
+    thisPathFinder.flag = 4;
   }
   reset() {
     const thisPathFinder = this;
