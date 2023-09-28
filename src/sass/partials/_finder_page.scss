@@ -43,6 +43,11 @@
       background-color: red;
     }
 
+    .square.neighbour {
+      background-color: green;
+      opacity: 0.5;
+    }
+
     .square.shortest {
       background-color: aqua;
     }

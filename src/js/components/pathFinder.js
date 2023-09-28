@@ -45,79 +45,217 @@ class PathFinder {
 
     for (let square of thisPathFinder.dom.squares) {
       square.addEventListener('click', function () {
+        thisPathFinder.squareIndexRow = parseInt(
+          square.getAttribute('data-row')
+        );
+        thisPathFinder.squareIndexCol = parseInt(
+          square.getAttribute('data-col')
+        );
         if (thisPathFinder.flag === 0) {
           console.log('thisPathFinder.flag ', thisPathFinder.flag);
           const clickedElement = this;
           clickedElement.classList.add('clicked');
-          const squareIndexRow = parseInt(square.getAttribute('data-row'));
-          const squareIndexCol = parseInt(square.getAttribute('data-col'));
-          console.log(squareIndexRow, squareIndexCol);
 
-          const squareId = `${squareIndexRow}-${squareIndexCol}`;
+          thisPathFinder.flag = 1;
+
+          const squareId = `${thisPathFinder.squareIndexRow}-${thisPathFinder.squareIndexCol}`;
           thisPathFinder.graph[squareId] = [];
+        }
+        if (thisPathFinder.flag === 1) {
+          const clickedElement = this;
 
-          if (squareIndexRow - 1 >= 0) {
-            const neighborId = `${squareIndexRow - 1}-${squareIndexCol}`;
+          thisPathFinder.squareId = `${thisPathFinder.squareIndexRow}-${thisPathFinder.squareIndexCol}`;
+          thisPathFinder.graph[thisPathFinder.squareId] = [];
+
+          if (thisPathFinder.squareIndexRow - 1 >= 0) {
+            const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
+              `[data-row="${thisPathFinder.squareIndexRow - 1}"][data-col="${
+                thisPathFinder.squareIndexCol
+              }"]`
+            );
+            if (
+              neighborSquare &&
+              neighborSquare.classList.contains('clicked')
+            ) {
+              clickedElement.classList.add('clicked');
+              clickedElement.classList.remove('neighbour');
+            }
+          }
+
+          if (thisPathFinder.squareIndexRow + 1 < rows) {
+            const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
+              `[data-row="${thisPathFinder.squareIndexRow + 1}"][data-col="${
+                thisPathFinder.squareIndexCol
+              }"]`
+            );
+            if (
+              neighborSquare &&
+              neighborSquare.classList.contains('clicked')
+            ) {
+              clickedElement.classList.add('clicked');
+              clickedElement.classList.remove('neighbour');
+            }
+          }
+
+          if (thisPathFinder.squareIndexCol - 1 >= 0) {
+            const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
+              `[data-row="${thisPathFinder.squareIndexRow}"][data-col="${
+                thisPathFinder.squareIndexCol - 1
+              }"]`
+            );
+            if (
+              neighborSquare &&
+              neighborSquare.classList.contains('clicked')
+            ) {
+              clickedElement.classList.add('clicked');
+              clickedElement.classList.remove('neighbour');
+            }
+          }
+
+          if (thisPathFinder.squareIndexCol + 1 < cols) {
+            const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
+              `[data-row="${thisPathFinder.squareIndexRow}"][data-col="${
+                thisPathFinder.squareIndexCol + 1
+              }"]`
+            );
+            if (
+              neighborSquare &&
+              neighborSquare.classList.contains('clicked')
+            ) {
+              clickedElement.classList.add('clicked');
+              clickedElement.classList.remove('neighbour');
+            }
+          }
+
+          if (thisPathFinder.squareIndexRow - 1 >= 0) {
+            thisPathFinder.neighborId = `${thisPathFinder.squareIndexRow - 1}-${
+              thisPathFinder.squareIndexCol
+            }`;
             if (
               thisPathFinder.dom.wrapper
                 .querySelector(
                   `[data-row="${
-                    squareIndexRow - 1
-                  }"][data-col="${squareIndexCol}"]`
+                    thisPathFinder.squareIndexRow - 1
+                  }"][data-col="${thisPathFinder.squareIndexCol}"]`
                 )
                 .classList.contains('clicked')
             ) {
-              thisPathFinder.graph[squareId].push(neighborId);
-              thisPathFinder.graph[neighborId].push(squareId);
+              thisPathFinder.graph[thisPathFinder.squareId].push(
+                thisPathFinder.neighborId
+              );
+              thisPathFinder.graph[thisPathFinder.neighborId].push(
+                thisPathFinder.squareId
+              );
             }
           }
-          if (squareIndexRow + 1 < rows) {
-            const neighborId = `${squareIndexRow + 1}-${squareIndexCol}`;
+          if (thisPathFinder.squareIndexRow + 1 < rows) {
+            const neighborId = `${thisPathFinder.squareIndexRow + 1}-${
+              thisPathFinder.squareIndexCol
+            }`;
             if (
               thisPathFinder.dom.wrapper
                 .querySelector(
                   `[data-row="${
-                    squareIndexRow + 1
-                  }"][data-col="${squareIndexCol}"]`
+                    thisPathFinder.squareIndexRow + 1
+                  }"][data-col="${thisPathFinder.squareIndexCol}"]`
                 )
                 .classList.contains('clicked')
             ) {
-              thisPathFinder.graph[squareId].push(neighborId);
-              thisPathFinder.graph[neighborId].push(squareId);
+              thisPathFinder.graph[thisPathFinder.squareId].push(neighborId);
+              thisPathFinder.graph[neighborId].push(thisPathFinder.squareId);
             }
           }
-          if (squareIndexCol - 1 >= 0) {
-            const neighborId = `${squareIndexRow}-${squareIndexCol - 1}`;
+          if (thisPathFinder.squareIndexCol - 1 >= 0) {
+            const neighborId = `${thisPathFinder.squareIndexRow}-${
+              thisPathFinder.squareIndexCol - 1
+            }`;
             if (
               thisPathFinder.dom.wrapper
                 .querySelector(
-                  `[data-row="${squareIndexRow}"][data-col="${
-                    squareIndexCol - 1
+                  `[data-row="${thisPathFinder.squareIndexRow}"][data-col="${
+                    thisPathFinder.squareIndexCol - 1
                   }"]`
                 )
                 .classList.contains('clicked')
             ) {
-              thisPathFinder.graph[squareId].push(neighborId);
-              thisPathFinder.graph[neighborId].push(squareId);
+              thisPathFinder.graph[thisPathFinder.squareId].push(neighborId);
+              thisPathFinder.graph[neighborId].push(thisPathFinder.squareId);
             }
           }
-          if (squareIndexCol + 1 < cols) {
-            const neighborId = `${squareIndexRow}-${squareIndexCol + 1}`;
+          if (thisPathFinder.squareIndexCol + 1 < cols) {
+            const neighborId = `${thisPathFinder.squareIndexRow}-${
+              thisPathFinder.squareIndexCol + 1
+            }`;
             if (
               thisPathFinder.dom.wrapper
                 .querySelector(
-                  `[data-row="${squareIndexRow}"][data-col="${
-                    squareIndexCol + 1
+                  `[data-row="${thisPathFinder.squareIndexRow}"][data-col="${
+                    thisPathFinder.squareIndexCol + 1
                   }"]`
                 )
                 .classList.contains('clicked')
             ) {
-              thisPathFinder.graph[squareId].push(neighborId);
-              thisPathFinder.graph[neighborId].push(squareId);
+              thisPathFinder.graph[thisPathFinder.squareId].push(neighborId);
+              thisPathFinder.graph[neighborId].push(thisPathFinder.squareId);
             }
           }
 
           console.log(thisPathFinder.graph);
+        }
+        if (square.classList.contains('clicked')) {
+          if (thisPathFinder.squareIndexCol - 1 >= 0) {
+            const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
+              `[data-row="${thisPathFinder.squareIndexRow}"][data-col="${
+                thisPathFinder.squareIndexCol - 1
+              }"]`
+            );
+            if (
+              neighborSquare &&
+              !neighborSquare.classList.contains('clicked')
+            ) {
+              neighborSquare.classList.add('neighbour');
+            }
+          }
+          if (thisPathFinder.squareIndexCol + 1 < cols) {
+            const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
+              `[data-row="${thisPathFinder.squareIndexRow}"][data-col="${
+                thisPathFinder.squareIndexCol + 1
+              }"]`
+            );
+            if (
+              neighborSquare &&
+              !neighborSquare.classList.contains('clicked')
+            ) {
+              neighborSquare.classList.add('neighbour');
+            }
+          }
+          if (thisPathFinder.squareIndexRow - 1 >= 0) {
+            const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
+              `[data-row="${thisPathFinder.squareIndexRow - 1}"][data-col="${
+                thisPathFinder.squareIndexCol
+              }"]`
+            );
+            if (
+              neighborSquare &&
+              !neighborSquare.classList.contains('clicked')
+            ) {
+              neighborSquare.classList.add('neighbour');
+            }
+          }
+          if (thisPathFinder.squareIndexRow + 1 < rows) {
+            const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
+              `[data-row="${thisPathFinder.squareIndexRow + 1}"][data-col="${
+                thisPathFinder.squareIndexCol
+              }"]`
+            );
+
+            if (
+              neighborSquare &&
+              !neighborSquare.classList.contains('clicked')
+            ) {
+              neighborSquare.classList.add('neighbour');
+            }
+          }
         }
       });
     }
@@ -126,7 +264,7 @@ class PathFinder {
   initAction() {
     const thisPathFinder = this;
     thisPathFinder.dom.btn.addEventListener('click', function () {
-      if (thisPathFinder.flag === 0) {
+      if (thisPathFinder.flag === 1) {
         const clickedSquares =
           thisPathFinder.dom.wrapper.querySelectorAll('.square.clicked');
 
@@ -134,7 +272,7 @@ class PathFinder {
           alert('Choose at least dwo squares');
           return;
         }
-        thisPathFinder.flag = 1;
+        thisPathFinder.flag = 2;
         thisPathFinder.dom.subtitle.textContent = 'Pick start and finish';
         thisPathFinder.dom.btn.textContent = 'compute';
         thisPathFinder.dom.clickedSquares =
@@ -144,11 +282,11 @@ class PathFinder {
           thisPathFinder.dom.clickedSquares
         );
         thisPathFinder.chooseStartEnd();
-      } else if (thisPathFinder.flag === 3) {
+      } else if (thisPathFinder.flag === 4) {
         thisPathFinder.dom.subtitle.textContent = 'The best route is...';
         thisPathFinder.dom.btn.textContent = 'statr again';
         thisPathFinder.findShortestPath();
-      } else if (thisPathFinder.flag === 4) {
+      } else if (thisPathFinder.flag === 5) {
         thisPathFinder.reset();
       }
     });
@@ -161,20 +299,24 @@ class PathFinder {
       square.addEventListener('click', function () {
         const clickedElement = this;
         console.log('thisPathFinder.flag', thisPathFinder.flag);
-        if (thisPathFinder.flag === 1) {
+        for (let square of thisPathFinder.dom.squares) {
+          square.classList.remove('neighbour');
+        }
+        if (thisPathFinder.flag === 2) {
           clickedElement.classList.add('start');
           const startIndexRow = parseInt(square.getAttribute('data-row'));
           const startIndexCol = parseInt(square.getAttribute('data-col'));
           thisPathFinder.startPoint = `${startIndexRow}-${startIndexCol}`;
           console.log('startPoint', thisPathFinder.startPoint);
-          thisPathFinder.flag = 2;
-        } else if (thisPathFinder.flag === 2) {
+
+          thisPathFinder.flag = 3;
+        } else if (thisPathFinder.flag === 3) {
           clickedElement.classList.add('end');
           const endIndexRow = parseInt(square.getAttribute('data-row'));
           const endIndexCol = parseInt(square.getAttribute('data-col'));
           thisPathFinder.endPoint = `${endIndexRow}-${endIndexCol}`;
           console.log('endPoint', thisPathFinder.endPoint);
-          thisPathFinder.flag = 3;
+          thisPathFinder.flag = 4;
         }
       });
     }
@@ -182,7 +324,7 @@ class PathFinder {
 
   findShortestPath() {
     const thisPathFinder = this;
-    thisPathFinder.flag = 4;
+    thisPathFinder.flag = 5;
     const queue = [{ node: thisPathFinder.startPoint, path: [] }];
     console.log('queue', queue);
     const visited = new Set();
