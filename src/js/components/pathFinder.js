@@ -1,11 +1,10 @@
-const rows = 10;
-const cols = 10;
-
 class PathFinder {
   constructor() {
     const thisPathFinder = this;
     thisPathFinder.flag = 0;
     thisPathFinder.shortestPath = [];
+    thisPathFinder.rows = 10;
+    thisPathFinder.cols = 10;
     thisPathFinder.renderGrid();
     thisPathFinder.getElements();
     thisPathFinder.chooseSquares();
@@ -28,8 +27,8 @@ class PathFinder {
     thisPathFinder.dom = {};
     thisPathFinder.dom.wrapper = document.querySelector('.game-field');
     thisPathFinder.dom.wrapper.innerHTML = '';
-    for (let row = 0; row < rows; row++) {
-      for (let col = 0; col < cols; col++) {
+    for (let row = 0; row < thisPathFinder.rows; row++) {
+      for (let col = 0; col < thisPathFinder.cols; col++) {
         let square = document.createElement('div');
         square.classList.add('square');
         square.dataset.row = row;
@@ -45,219 +44,257 @@ class PathFinder {
 
     for (let square of thisPathFinder.dom.squares) {
       square.addEventListener('click', function () {
-        thisPathFinder.squareIndexRow = parseInt(
+        thisPathFinder.clickedSquareIndexRow = parseInt(
           square.getAttribute('data-row')
         );
-        thisPathFinder.squareIndexCol = parseInt(
+        thisPathFinder.clickedSquareIndexCol = parseInt(
           square.getAttribute('data-col')
         );
-        if (thisPathFinder.flag === 0) {
-          console.log('thisPathFinder.flag ', thisPathFinder.flag);
-          const clickedElement = this;
-          clickedElement.classList.add('clicked');
+        const squareId = `${thisPathFinder.clickedSquareIndexRow}-${thisPathFinder.clickedSquareIndexCol}`;
 
-          thisPathFinder.flag = 1;
+        if (!square.classList.contains('clicked')) {
+          if (thisPathFinder.flag === 0) {
+            console.log('thisPathFinder.flag ', thisPathFinder.flag);
+            const clickedElement = this;
+            clickedElement.classList.add('clicked');
 
-          const squareId = `${thisPathFinder.squareIndexRow}-${thisPathFinder.squareIndexCol}`;
-          thisPathFinder.graph[squareId] = [];
-        }
-        if (thisPathFinder.flag === 1) {
-          const clickedElement = this;
+            thisPathFinder.flag = 1;
 
-          thisPathFinder.squareId = `${thisPathFinder.squareIndexRow}-${thisPathFinder.squareIndexCol}`;
-          thisPathFinder.graph[thisPathFinder.squareId] = [];
-
-          if (thisPathFinder.squareIndexRow - 1 >= 0) {
-            const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
-              `[data-row="${thisPathFinder.squareIndexRow - 1}"][data-col="${
-                thisPathFinder.squareIndexCol
-              }"]`
-            );
-            if (
-              neighborSquare &&
-              neighborSquare.classList.contains('clicked')
-            ) {
-              clickedElement.classList.add('clicked');
-              clickedElement.classList.remove('neighbour');
-            }
+            thisPathFinder.graph[squareId] = [];
           }
+          if (thisPathFinder.flag === 1) {
+            const clickedElement = this;
 
-          if (thisPathFinder.squareIndexRow + 1 < rows) {
-            const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
-              `[data-row="${thisPathFinder.squareIndexRow + 1}"][data-col="${
-                thisPathFinder.squareIndexCol
-              }"]`
-            );
-            if (
-              neighborSquare &&
-              neighborSquare.classList.contains('clicked')
-            ) {
-              clickedElement.classList.add('clicked');
-              clickedElement.classList.remove('neighbour');
-            }
-          }
+            thisPathFinder.squareId = `${thisPathFinder.clickedSquareIndexRow}-${thisPathFinder.clickedSquareIndexCol}`;
+            // thisPathFinder.graph[thisPathFinder.squareId] = [];
 
-          if (thisPathFinder.squareIndexCol - 1 >= 0) {
-            const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
-              `[data-row="${thisPathFinder.squareIndexRow}"][data-col="${
-                thisPathFinder.squareIndexCol - 1
-              }"]`
-            );
-            if (
-              neighborSquare &&
-              neighborSquare.classList.contains('clicked')
-            ) {
-              clickedElement.classList.add('clicked');
-              clickedElement.classList.remove('neighbour');
-            }
-          }
-
-          if (thisPathFinder.squareIndexCol + 1 < cols) {
-            const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
-              `[data-row="${thisPathFinder.squareIndexRow}"][data-col="${
-                thisPathFinder.squareIndexCol + 1
-              }"]`
-            );
-            if (
-              neighborSquare &&
-              neighborSquare.classList.contains('clicked')
-            ) {
-              clickedElement.classList.add('clicked');
-              clickedElement.classList.remove('neighbour');
-            }
-          }
-
-          if (thisPathFinder.squareIndexRow - 1 >= 0) {
-            thisPathFinder.neighborId = `${thisPathFinder.squareIndexRow - 1}-${
-              thisPathFinder.squareIndexCol
-            }`;
-            if (
-              thisPathFinder.dom.wrapper
-                .querySelector(
-                  `[data-row="${
-                    thisPathFinder.squareIndexRow - 1
-                  }"][data-col="${thisPathFinder.squareIndexCol}"]`
-                )
-                .classList.contains('clicked')
-            ) {
-              thisPathFinder.graph[thisPathFinder.squareId].push(
-                thisPathFinder.neighborId
+            if (thisPathFinder.clickedSquareIndexRow - 1 >= 0) {
+              const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
+                `[data-row="${
+                  thisPathFinder.clickedSquareIndexRow - 1
+                }"][data-col="${thisPathFinder.clickedSquareIndexCol}"]`
               );
-              thisPathFinder.graph[thisPathFinder.neighborId].push(
-                thisPathFinder.squareId
-              );
+              if (
+                neighborSquare &&
+                neighborSquare.classList.contains('clicked')
+              ) {
+                clickedElement.classList.add('clicked');
+                clickedElement.classList.remove('neighbour');
+                thisPathFinder.graph[thisPathFinder.squareId] = [];
+              }
             }
-          }
-          if (thisPathFinder.squareIndexRow + 1 < rows) {
-            const neighborId = `${thisPathFinder.squareIndexRow + 1}-${
-              thisPathFinder.squareIndexCol
-            }`;
-            if (
-              thisPathFinder.dom.wrapper
-                .querySelector(
-                  `[data-row="${
-                    thisPathFinder.squareIndexRow + 1
-                  }"][data-col="${thisPathFinder.squareIndexCol}"]`
-                )
-                .classList.contains('clicked')
-            ) {
-              thisPathFinder.graph[thisPathFinder.squareId].push(neighborId);
-              thisPathFinder.graph[neighborId].push(thisPathFinder.squareId);
-            }
-          }
-          if (thisPathFinder.squareIndexCol - 1 >= 0) {
-            const neighborId = `${thisPathFinder.squareIndexRow}-${
-              thisPathFinder.squareIndexCol - 1
-            }`;
-            if (
-              thisPathFinder.dom.wrapper
-                .querySelector(
-                  `[data-row="${thisPathFinder.squareIndexRow}"][data-col="${
-                    thisPathFinder.squareIndexCol - 1
-                  }"]`
-                )
-                .classList.contains('clicked')
-            ) {
-              thisPathFinder.graph[thisPathFinder.squareId].push(neighborId);
-              thisPathFinder.graph[neighborId].push(thisPathFinder.squareId);
-            }
-          }
-          if (thisPathFinder.squareIndexCol + 1 < cols) {
-            const neighborId = `${thisPathFinder.squareIndexRow}-${
-              thisPathFinder.squareIndexCol + 1
-            }`;
-            if (
-              thisPathFinder.dom.wrapper
-                .querySelector(
-                  `[data-row="${thisPathFinder.squareIndexRow}"][data-col="${
-                    thisPathFinder.squareIndexCol + 1
-                  }"]`
-                )
-                .classList.contains('clicked')
-            ) {
-              thisPathFinder.graph[thisPathFinder.squareId].push(neighborId);
-              thisPathFinder.graph[neighborId].push(thisPathFinder.squareId);
-            }
-          }
 
+            if (
+              thisPathFinder.clickedSquareIndexRow + 1 <
+              thisPathFinder.rows
+            ) {
+              const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
+                `[data-row="${
+                  thisPathFinder.clickedSquareIndexRow + 1
+                }"][data-col="${thisPathFinder.clickedSquareIndexCol}"]`
+              );
+              if (
+                neighborSquare &&
+                neighborSquare.classList.contains('clicked')
+              ) {
+                clickedElement.classList.add('clicked');
+                clickedElement.classList.remove('neighbour');
+                thisPathFinder.graph[thisPathFinder.squareId] = [];
+              }
+            }
+
+            if (thisPathFinder.clickedSquareIndexCol - 1 >= 0) {
+              const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
+                `[data-row="${
+                  thisPathFinder.clickedSquareIndexRow
+                }"][data-col="${thisPathFinder.clickedSquareIndexCol - 1}"]`
+              );
+              if (
+                neighborSquare &&
+                neighborSquare.classList.contains('clicked')
+              ) {
+                clickedElement.classList.add('clicked');
+                clickedElement.classList.remove('neighbour');
+                thisPathFinder.graph[thisPathFinder.squareId] = [];
+              }
+            }
+
+            if (
+              thisPathFinder.clickedSquareIndexCol + 1 <
+              thisPathFinder.cols
+            ) {
+              const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
+                `[data-row="${
+                  thisPathFinder.clickedSquareIndexRow
+                }"][data-col="${thisPathFinder.clickedSquareIndexCol + 1}"]`
+              );
+              if (
+                neighborSquare &&
+                neighborSquare.classList.contains('clicked')
+              ) {
+                clickedElement.classList.add('clicked');
+                clickedElement.classList.remove('neighbour');
+                thisPathFinder.graph[thisPathFinder.squareId] = [];
+              }
+            }
+
+            if (thisPathFinder.clickedSquareIndexRow - 1 >= 0) {
+              thisPathFinder.neighborId = `${
+                thisPathFinder.clickedSquareIndexRow - 1
+              }-${thisPathFinder.clickedSquareIndexCol}`;
+              if (
+                thisPathFinder.dom.wrapper
+                  .querySelector(
+                    `[data-row="${
+                      thisPathFinder.clickedSquareIndexRow - 1
+                    }"][data-col="${thisPathFinder.clickedSquareIndexCol}"]`
+                  )
+                  .classList.contains('clicked')
+              ) {
+                thisPathFinder.graph[thisPathFinder.squareId].push(
+                  thisPathFinder.neighborId
+                );
+                thisPathFinder.graph[thisPathFinder.neighborId].push(
+                  thisPathFinder.squareId
+                );
+              }
+            }
+            if (
+              thisPathFinder.clickedSquareIndexRow + 1 <
+              thisPathFinder.rows
+            ) {
+              const neighborId = `${thisPathFinder.clickedSquareIndexRow + 1}-${
+                thisPathFinder.clickedSquareIndexCol
+              }`;
+              if (
+                thisPathFinder.dom.wrapper
+                  .querySelector(
+                    `[data-row="${
+                      thisPathFinder.clickedSquareIndexRow + 1
+                    }"][data-col="${thisPathFinder.clickedSquareIndexCol}"]`
+                  )
+                  .classList.contains('clicked')
+              ) {
+                thisPathFinder.graph[thisPathFinder.squareId].push(neighborId);
+                thisPathFinder.graph[neighborId].push(thisPathFinder.squareId);
+              }
+            }
+            if (thisPathFinder.clickedSquareIndexCol - 1 >= 0) {
+              const neighborId = `${thisPathFinder.clickedSquareIndexRow}-${
+                thisPathFinder.clickedSquareIndexCol - 1
+              }`;
+              if (
+                thisPathFinder.dom.wrapper
+                  .querySelector(
+                    `[data-row="${
+                      thisPathFinder.clickedSquareIndexRow
+                    }"][data-col="${thisPathFinder.clickedSquareIndexCol - 1}"]`
+                  )
+                  .classList.contains('clicked')
+              ) {
+                thisPathFinder.graph[thisPathFinder.squareId].push(neighborId);
+                thisPathFinder.graph[neighborId].push(thisPathFinder.squareId);
+              }
+            }
+            if (
+              thisPathFinder.clickedSquareIndexCol + 1 <
+              thisPathFinder.cols
+            ) {
+              const neighborId = `${thisPathFinder.clickedSquareIndexRow}-${
+                thisPathFinder.clickedSquareIndexCol + 1
+              }`;
+              if (
+                thisPathFinder.dom.wrapper
+                  .querySelector(
+                    `[data-row="${
+                      thisPathFinder.clickedSquareIndexRow
+                    }"][data-col="${thisPathFinder.clickedSquareIndexCol + 1}"]`
+                  )
+                  .classList.contains('clicked')
+              ) {
+                thisPathFinder.graph[thisPathFinder.squareId].push(neighborId);
+                thisPathFinder.graph[neighborId].push(thisPathFinder.squareId);
+              }
+            }
+
+            console.log(thisPathFinder.graph);
+          }
+        } else if (square.classList.contains('clicked')) {
+          if (thisPathFinder.flag === 1) {
+            square.classList.remove('clicked');
+
+            delete thisPathFinder.graph[squareId];
+
+            for (const squareArrayID in thisPathFinder.graph) {
+              const squareArray = thisPathFinder.graph[squareArrayID];
+              if (squareArray.includes(squareId)) {
+                const indexOfSquareID = squareArray.indexOf(squareId);
+                squareArray.splice(indexOfSquareID, 1);
+              }
+            }
+          }
           console.log(thisPathFinder.graph);
+          if (Object.keys(thisPathFinder.graph).length === 0) {
+            thisPathFinder.flag = 0;
+          }
         }
-        if (square.classList.contains('clicked')) {
-          if (thisPathFinder.squareIndexCol - 1 >= 0) {
-            const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
-              `[data-row="${thisPathFinder.squareIndexRow}"][data-col="${
-                thisPathFinder.squareIndexCol - 1
-              }"]`
-            );
-            if (
-              neighborSquare &&
-              !neighborSquare.classList.contains('clicked')
-            ) {
-              neighborSquare.classList.add('neighbour');
-            }
-          }
-          if (thisPathFinder.squareIndexCol + 1 < cols) {
-            const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
-              `[data-row="${thisPathFinder.squareIndexRow}"][data-col="${
-                thisPathFinder.squareIndexCol + 1
-              }"]`
-            );
-            if (
-              neighborSquare &&
-              !neighborSquare.classList.contains('clicked')
-            ) {
-              neighborSquare.classList.add('neighbour');
-            }
-          }
-          if (thisPathFinder.squareIndexRow - 1 >= 0) {
-            const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
-              `[data-row="${thisPathFinder.squareIndexRow - 1}"][data-col="${
-                thisPathFinder.squareIndexCol
-              }"]`
-            );
-            if (
-              neighborSquare &&
-              !neighborSquare.classList.contains('clicked')
-            ) {
-              neighborSquare.classList.add('neighbour');
-            }
-          }
-          if (thisPathFinder.squareIndexRow + 1 < rows) {
-            const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
-              `[data-row="${thisPathFinder.squareIndexRow + 1}"][data-col="${
-                thisPathFinder.squareIndexCol
-              }"]`
-            );
 
-            if (
-              neighborSquare &&
-              !neighborSquare.classList.contains('clicked')
-            ) {
-              neighborSquare.classList.add('neighbour');
-            }
+        thisPathFinder.addNeighbour();
+      });
+    }
+  }
+
+  addNeighbour() {
+    const thisPathFinder = this;
+    for (let square of thisPathFinder.dom.squares) {
+      square.classList.remove('neighbour');
+    }
+    for (let square of thisPathFinder.dom.squares) {
+      thisPathFinder.squareIndexRow = parseInt(square.getAttribute('data-row'));
+      thisPathFinder.squareIndexCol = parseInt(square.getAttribute('data-col'));
+
+      if (square.classList.contains('clicked')) {
+        if (thisPathFinder.squareIndexCol - 1 >= 0) {
+          const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
+            `[data-row="${thisPathFinder.squareIndexRow}"][data-col="${
+              thisPathFinder.squareIndexCol - 1
+            }"]`
+          );
+          if (neighborSquare && !neighborSquare.classList.contains('clicked')) {
+            neighborSquare.classList.add('neighbour');
           }
         }
-      });
+        if (thisPathFinder.squareIndexCol + 1 < thisPathFinder.cols) {
+          const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
+            `[data-row="${thisPathFinder.squareIndexRow}"][data-col="${
+              thisPathFinder.squareIndexCol + 1
+            }"]`
+          );
+          if (neighborSquare && !neighborSquare.classList.contains('clicked')) {
+            neighborSquare.classList.add('neighbour');
+          }
+        }
+        if (thisPathFinder.squareIndexRow - 1 >= 0) {
+          const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
+            `[data-row="${thisPathFinder.squareIndexRow - 1}"][data-col="${
+              thisPathFinder.squareIndexCol
+            }"]`
+          );
+          if (neighborSquare && !neighborSquare.classList.contains('clicked')) {
+            neighborSquare.classList.add('neighbour');
+          }
+        }
+        if (thisPathFinder.squareIndexRow + 1 < thisPathFinder.rows) {
+          const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
+            `[data-row="${thisPathFinder.squareIndexRow + 1}"][data-col="${
+              thisPathFinder.squareIndexCol
+            }"]`
+          );
+          if (neighborSquare && !neighborSquare.classList.contains('clicked')) {
+            neighborSquare.classList.add('neighbour');
+          }
+        }
+      }
     }
   }
 
