@@ -246,52 +246,70 @@ class PathFinder {
 
   addNeighbour() {
     const thisPathFinder = this;
-    for (let square of thisPathFinder.dom.squares) {
-      square.classList.remove('neighbour');
-    }
-    for (let square of thisPathFinder.dom.squares) {
-      thisPathFinder.squareIndexRow = parseInt(square.getAttribute('data-row'));
-      thisPathFinder.squareIndexCol = parseInt(square.getAttribute('data-col'));
+    if (thisPathFinder.flag === 0 || thisPathFinder.flag === 1) {
+      for (let square of thisPathFinder.dom.squares) {
+        square.classList.remove('neighbour');
+      }
+      for (let square of thisPathFinder.dom.squares) {
+        thisPathFinder.squareIndexRow = parseInt(
+          square.getAttribute('data-row')
+        );
+        thisPathFinder.squareIndexCol = parseInt(
+          square.getAttribute('data-col')
+        );
 
-      if (square.classList.contains('clicked')) {
-        if (thisPathFinder.squareIndexCol - 1 >= 0) {
-          const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
-            `[data-row="${thisPathFinder.squareIndexRow}"][data-col="${
-              thisPathFinder.squareIndexCol - 1
-            }"]`
-          );
-          if (neighborSquare && !neighborSquare.classList.contains('clicked')) {
-            neighborSquare.classList.add('neighbour');
+        if (square.classList.contains('clicked')) {
+          if (thisPathFinder.squareIndexCol - 1 >= 0) {
+            const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
+              `[data-row="${thisPathFinder.squareIndexRow}"][data-col="${
+                thisPathFinder.squareIndexCol - 1
+              }"]`
+            );
+            if (
+              neighborSquare &&
+              !neighborSquare.classList.contains('clicked')
+            ) {
+              neighborSquare.classList.add('neighbour');
+            }
           }
-        }
-        if (thisPathFinder.squareIndexCol + 1 < thisPathFinder.cols) {
-          const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
-            `[data-row="${thisPathFinder.squareIndexRow}"][data-col="${
-              thisPathFinder.squareIndexCol + 1
-            }"]`
-          );
-          if (neighborSquare && !neighborSquare.classList.contains('clicked')) {
-            neighborSquare.classList.add('neighbour');
+          if (thisPathFinder.squareIndexCol + 1 < thisPathFinder.cols) {
+            const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
+              `[data-row="${thisPathFinder.squareIndexRow}"][data-col="${
+                thisPathFinder.squareIndexCol + 1
+              }"]`
+            );
+            if (
+              neighborSquare &&
+              !neighborSquare.classList.contains('clicked')
+            ) {
+              neighborSquare.classList.add('neighbour');
+            }
           }
-        }
-        if (thisPathFinder.squareIndexRow - 1 >= 0) {
-          const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
-            `[data-row="${thisPathFinder.squareIndexRow - 1}"][data-col="${
-              thisPathFinder.squareIndexCol
-            }"]`
-          );
-          if (neighborSquare && !neighborSquare.classList.contains('clicked')) {
-            neighborSquare.classList.add('neighbour');
+          if (thisPathFinder.squareIndexRow - 1 >= 0) {
+            const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
+              `[data-row="${thisPathFinder.squareIndexRow - 1}"][data-col="${
+                thisPathFinder.squareIndexCol
+              }"]`
+            );
+            if (
+              neighborSquare &&
+              !neighborSquare.classList.contains('clicked')
+            ) {
+              neighborSquare.classList.add('neighbour');
+            }
           }
-        }
-        if (thisPathFinder.squareIndexRow + 1 < thisPathFinder.rows) {
-          const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
-            `[data-row="${thisPathFinder.squareIndexRow + 1}"][data-col="${
-              thisPathFinder.squareIndexCol
-            }"]`
-          );
-          if (neighborSquare && !neighborSquare.classList.contains('clicked')) {
-            neighborSquare.classList.add('neighbour');
+          if (thisPathFinder.squareIndexRow + 1 < thisPathFinder.rows) {
+            const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
+              `[data-row="${thisPathFinder.squareIndexRow + 1}"][data-col="${
+                thisPathFinder.squareIndexCol
+              }"]`
+            );
+            if (
+              neighborSquare &&
+              !neighborSquare.classList.contains('clicked')
+            ) {
+              neighborSquare.classList.add('neighbour');
+            }
           }
         }
       }
