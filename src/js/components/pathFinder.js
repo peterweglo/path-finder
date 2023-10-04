@@ -15,8 +15,7 @@ class PathFinder {
     const thisPathFinder = this;
     const element = thisPathFinder.dom.wrapper;
     thisPathFinder.dom.squares = element.querySelectorAll('.square');
-    // console.log('squares', thisPathFinder.dom.squares);
-    thisPathFinder.dom.btn = document.querySelector('button');
+    thisPathFinder.dom.button = document.querySelector('button');
     thisPathFinder.dom.subtitle = document.querySelector(
       '.pathfinder-subtitle'
     );
@@ -37,7 +36,76 @@ class PathFinder {
       }
     }
   }
+  addNeighbour() {
+    const thisPathFinder = this;
 
+    if (thisPathFinder.flag === 0 || thisPathFinder.flag === 1) {
+      for (let square of thisPathFinder.dom.squares) {
+        square.classList.remove('neighbour');
+      }
+      for (let square of thisPathFinder.dom.squares) {
+        thisPathFinder.squareIndexRow = parseInt(
+          square.getAttribute('data-row')
+        );
+        thisPathFinder.squareIndexCol = parseInt(
+          square.getAttribute('data-col')
+        );
+
+        const prevSquareIndexCol = thisPathFinder.squareIndexCol - 1;
+        const nextSquareIndexCol = thisPathFinder.squareIndexCol + 1;
+        const nextSquareIndexRow = thisPathFinder.squareIndexRow + 1;
+        const prevSquareIndexRow = thisPathFinder.squareIndexRow - 1;
+
+        if (square.classList.contains('clicked')) {
+          if (prevSquareIndexCol >= 0) {
+            const neighbourSquare = thisPathFinder.dom.wrapper.querySelector(
+              `[data-row="${thisPathFinder.squareIndexRow}"][data-col="${prevSquareIndexCol}"]`
+            );
+
+            if (
+              neighbourSquare &&
+              !neighbourSquare.classList.contains('clicked')
+            ) {
+              neighbourSquare.classList.add('neighbour');
+            }
+          }
+          if (nextSquareIndexCol < thisPathFinder.cols) {
+            const neighbourSquare = thisPathFinder.dom.wrapper.querySelector(
+              `[data-row="${thisPathFinder.squareIndexRow}"][data-col="${nextSquareIndexCol}"]`
+            );
+            if (
+              neighbourSquare &&
+              !neighbourSquare.classList.contains('clicked')
+            ) {
+              neighbourSquare.classList.add('neighbour');
+            }
+          }
+          if (prevSquareIndexRow >= 0) {
+            const neighbourSquare = thisPathFinder.dom.wrapper.querySelector(
+              `[data-row="${prevSquareIndexRow}"][data-col="${thisPathFinder.squareIndexCol}"]`
+            );
+            if (
+              neighbourSquare &&
+              !neighbourSquare.classList.contains('clicked')
+            ) {
+              neighbourSquare.classList.add('neighbour');
+            }
+          }
+          if (nextSquareIndexRow < thisPathFinder.rows) {
+            const neighbourSquare = thisPathFinder.dom.wrapper.querySelector(
+              `[data-row="${nextSquareIndexRow}"][data-col="${thisPathFinder.squareIndexCol}"]`
+            );
+            if (
+              neighbourSquare &&
+              !neighbourSquare.classList.contains('clicked')
+            ) {
+              neighbourSquare.classList.add('neighbour');
+            }
+          }
+        }
+      }
+    }
+  }
   chooseSquares() {
     const thisPathFinder = this;
     thisPathFinder.graph = {};
@@ -52,9 +120,17 @@ class PathFinder {
         );
         const squareId = `${thisPathFinder.clickedSquareIndexRow}-${thisPathFinder.clickedSquareIndexCol}`;
 
+        const prevClickedSquareIndexRow =
+          thisPathFinder.clickedSquareIndexRow - 1;
+        const nextClickedSquareIndexRow =
+          thisPathFinder.clickedSquareIndexRow + 1;
+        const prevClickedSquareIndexCol =
+          thisPathFinder.clickedSquareIndexCol - 1;
+        const nextClickedSquareIndexCol =
+          thisPathFinder.clickedSquareIndexCol + 1;
+
         if (!square.classList.contains('clicked')) {
           if (thisPathFinder.flag === 0) {
-            console.log('thisPathFinder.flag ', thisPathFinder.flag);
             const clickedElement = this;
             clickedElement.classList.add('clicked');
 
@@ -66,112 +142,63 @@ class PathFinder {
             const clickedElement = this;
 
             thisPathFinder.squareId = `${thisPathFinder.clickedSquareIndexRow}-${thisPathFinder.clickedSquareIndexCol}`;
-            // thisPathFinder.graph[thisPathFinder.squareId] = [];
 
-            if (thisPathFinder.clickedSquareIndexRow - 1 >= 0) {
-              const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
-                `[data-row="${
-                  thisPathFinder.clickedSquareIndexRow - 1
-                }"][data-col="${thisPathFinder.clickedSquareIndexCol}"]`
+            const addClickedRemoveNeighbour = function () {
+              clickedElement.classList.add('clicked');
+              clickedElement.classList.remove('neighbour');
+              thisPathFinder.graph[thisPathFinder.squareId] = [];
+            };
+
+            if (prevClickedSquareIndexRow >= 0) {
+              const neighbourSquare = thisPathFinder.dom.wrapper.querySelector(
+                `[data-row="${prevClickedSquareIndexRow}"][data-col="${thisPathFinder.clickedSquareIndexCol}"]`
               );
               if (
-                neighborSquare &&
-                neighborSquare.classList.contains('clicked')
-              ) {
-                clickedElement.classList.add('clicked');
-                clickedElement.classList.remove('neighbour');
-                thisPathFinder.graph[thisPathFinder.squareId] = [];
-              }
+                neighbourSquare &&
+                neighbourSquare.classList.contains('clicked')
+              )
+                addClickedRemoveNeighbour();
             }
 
-            if (
-              thisPathFinder.clickedSquareIndexRow + 1 <
-              thisPathFinder.rows
-            ) {
-              const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
-                `[data-row="${
-                  thisPathFinder.clickedSquareIndexRow + 1
-                }"][data-col="${thisPathFinder.clickedSquareIndexCol}"]`
+            if (nextClickedSquareIndexRow < thisPathFinder.rows) {
+              const neighbourSquare = thisPathFinder.dom.wrapper.querySelector(
+                `[data-row="${nextClickedSquareIndexRow}"][data-col="${thisPathFinder.clickedSquareIndexCol}"]`
               );
               if (
-                neighborSquare &&
-                neighborSquare.classList.contains('clicked')
-              ) {
-                clickedElement.classList.add('clicked');
-                clickedElement.classList.remove('neighbour');
-                thisPathFinder.graph[thisPathFinder.squareId] = [];
-              }
+                neighbourSquare &&
+                neighbourSquare.classList.contains('clicked')
+              )
+                addClickedRemoveNeighbour();
             }
 
-            if (thisPathFinder.clickedSquareIndexCol - 1 >= 0) {
-              const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
-                `[data-row="${
-                  thisPathFinder.clickedSquareIndexRow
-                }"][data-col="${thisPathFinder.clickedSquareIndexCol - 1}"]`
+            if (prevClickedSquareIndexCol >= 0) {
+              const neighbourSquare = thisPathFinder.dom.wrapper.querySelector(
+                `[data-row="${thisPathFinder.clickedSquareIndexRow}"][data-col="${prevClickedSquareIndexCol}"]`
               );
               if (
-                neighborSquare &&
-                neighborSquare.classList.contains('clicked')
-              ) {
-                clickedElement.classList.add('clicked');
-                clickedElement.classList.remove('neighbour');
-                thisPathFinder.graph[thisPathFinder.squareId] = [];
-              }
+                neighbourSquare &&
+                neighbourSquare.classList.contains('clicked')
+              )
+                addClickedRemoveNeighbour();
             }
 
-            if (
-              thisPathFinder.clickedSquareIndexCol + 1 <
-              thisPathFinder.cols
-            ) {
-              const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
-                `[data-row="${
-                  thisPathFinder.clickedSquareIndexRow
-                }"][data-col="${thisPathFinder.clickedSquareIndexCol + 1}"]`
+            if (nextClickedSquareIndexCol < thisPathFinder.cols) {
+              const neighbourSquare = thisPathFinder.dom.wrapper.querySelector(
+                `[data-row="${thisPathFinder.clickedSquareIndexRow}"][data-col="${nextClickedSquareIndexCol}"]`
               );
               if (
-                neighborSquare &&
-                neighborSquare.classList.contains('clicked')
-              ) {
-                clickedElement.classList.add('clicked');
-                clickedElement.classList.remove('neighbour');
-                thisPathFinder.graph[thisPathFinder.squareId] = [];
-              }
+                neighbourSquare &&
+                neighbourSquare.classList.contains('clicked')
+              )
+                addClickedRemoveNeighbour();
             }
 
-            if (thisPathFinder.clickedSquareIndexRow - 1 >= 0) {
-              thisPathFinder.neighborId = `${
-                thisPathFinder.clickedSquareIndexRow - 1
-              }-${thisPathFinder.clickedSquareIndexCol}`;
+            if (prevClickedSquareIndexRow >= 0) {
+              const neighborId = `${prevClickedSquareIndexRow}-${thisPathFinder.clickedSquareIndexCol}`;
               if (
                 thisPathFinder.dom.wrapper
                   .querySelector(
-                    `[data-row="${
-                      thisPathFinder.clickedSquareIndexRow - 1
-                    }"][data-col="${thisPathFinder.clickedSquareIndexCol}"]`
-                  )
-                  .classList.contains('clicked')
-              ) {
-                thisPathFinder.graph[thisPathFinder.squareId].push(
-                  thisPathFinder.neighborId
-                );
-                thisPathFinder.graph[thisPathFinder.neighborId].push(
-                  thisPathFinder.squareId
-                );
-              }
-            }
-            if (
-              thisPathFinder.clickedSquareIndexRow + 1 <
-              thisPathFinder.rows
-            ) {
-              const neighborId = `${thisPathFinder.clickedSquareIndexRow + 1}-${
-                thisPathFinder.clickedSquareIndexCol
-              }`;
-              if (
-                thisPathFinder.dom.wrapper
-                  .querySelector(
-                    `[data-row="${
-                      thisPathFinder.clickedSquareIndexRow + 1
-                    }"][data-col="${thisPathFinder.clickedSquareIndexCol}"]`
+                    `[data-row="${prevClickedSquareIndexRow}"][data-col="${thisPathFinder.clickedSquareIndexCol}"]`
                   )
                   .classList.contains('clicked')
               ) {
@@ -179,16 +206,12 @@ class PathFinder {
                 thisPathFinder.graph[neighborId].push(thisPathFinder.squareId);
               }
             }
-            if (thisPathFinder.clickedSquareIndexCol - 1 >= 0) {
-              const neighborId = `${thisPathFinder.clickedSquareIndexRow}-${
-                thisPathFinder.clickedSquareIndexCol - 1
-              }`;
+            if (nextClickedSquareIndexRow < thisPathFinder.rows) {
+              const neighborId = `${nextClickedSquareIndexRow}-${thisPathFinder.clickedSquareIndexCol}`;
               if (
                 thisPathFinder.dom.wrapper
                   .querySelector(
-                    `[data-row="${
-                      thisPathFinder.clickedSquareIndexRow
-                    }"][data-col="${thisPathFinder.clickedSquareIndexCol - 1}"]`
+                    `[data-row="${nextClickedSquareIndexRow}"][data-col="${thisPathFinder.clickedSquareIndexCol}"]`
                   )
                   .classList.contains('clicked')
               ) {
@@ -196,19 +219,12 @@ class PathFinder {
                 thisPathFinder.graph[neighborId].push(thisPathFinder.squareId);
               }
             }
-            if (
-              thisPathFinder.clickedSquareIndexCol + 1 <
-              thisPathFinder.cols
-            ) {
-              const neighborId = `${thisPathFinder.clickedSquareIndexRow}-${
-                thisPathFinder.clickedSquareIndexCol + 1
-              }`;
+            if (prevClickedSquareIndexCol >= 0) {
+              const neighborId = `${thisPathFinder.clickedSquareIndexRow}-${prevClickedSquareIndexCol}`;
               if (
                 thisPathFinder.dom.wrapper
                   .querySelector(
-                    `[data-row="${
-                      thisPathFinder.clickedSquareIndexRow
-                    }"][data-col="${thisPathFinder.clickedSquareIndexCol + 1}"]`
+                    `[data-row="${thisPathFinder.clickedSquareIndexRow}"][data-col="${prevClickedSquareIndexCol}"]`
                   )
                   .classList.contains('clicked')
               ) {
@@ -216,8 +232,19 @@ class PathFinder {
                 thisPathFinder.graph[neighborId].push(thisPathFinder.squareId);
               }
             }
-
-            console.log(thisPathFinder.graph);
+            if (nextClickedSquareIndexCol < thisPathFinder.cols) {
+              const neighborId = `${thisPathFinder.clickedSquareIndexRow}-${nextClickedSquareIndexCol}`;
+              if (
+                thisPathFinder.dom.wrapper
+                  .querySelector(
+                    `[data-row="${thisPathFinder.clickedSquareIndexRow}"][data-col="${nextClickedSquareIndexCol}"]`
+                  )
+                  .classList.contains('clicked')
+              ) {
+                thisPathFinder.graph[thisPathFinder.squareId].push(neighborId);
+                thisPathFinder.graph[neighborId].push(thisPathFinder.squareId);
+              }
+            }
           }
         } else if (square.classList.contains('clicked')) {
           if (thisPathFinder.flag === 1) {
@@ -225,15 +252,14 @@ class PathFinder {
 
             delete thisPathFinder.graph[squareId];
 
-            for (const squareArrayID in thisPathFinder.graph) {
-              const squareArray = thisPathFinder.graph[squareArrayID];
+            for (const thissquareArrayId in thisPathFinder.graph) {
+              const squareArray = thisPathFinder.graph[thissquareArrayId];
               if (squareArray.includes(squareId)) {
                 const indexOfSquareID = squareArray.indexOf(squareId);
                 squareArray.splice(indexOfSquareID, 1);
               }
             }
           }
-          console.log(thisPathFinder.graph);
           if (Object.keys(thisPathFinder.graph).length === 0) {
             thisPathFinder.flag = 0;
           }
@@ -244,81 +270,9 @@ class PathFinder {
     }
   }
 
-  addNeighbour() {
-    const thisPathFinder = this;
-    if (thisPathFinder.flag === 0 || thisPathFinder.flag === 1) {
-      for (let square of thisPathFinder.dom.squares) {
-        square.classList.remove('neighbour');
-      }
-      for (let square of thisPathFinder.dom.squares) {
-        thisPathFinder.squareIndexRow = parseInt(
-          square.getAttribute('data-row')
-        );
-        thisPathFinder.squareIndexCol = parseInt(
-          square.getAttribute('data-col')
-        );
-
-        if (square.classList.contains('clicked')) {
-          if (thisPathFinder.squareIndexCol - 1 >= 0) {
-            const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
-              `[data-row="${thisPathFinder.squareIndexRow}"][data-col="${
-                thisPathFinder.squareIndexCol - 1
-              }"]`
-            );
-            if (
-              neighborSquare &&
-              !neighborSquare.classList.contains('clicked')
-            ) {
-              neighborSquare.classList.add('neighbour');
-            }
-          }
-          if (thisPathFinder.squareIndexCol + 1 < thisPathFinder.cols) {
-            const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
-              `[data-row="${thisPathFinder.squareIndexRow}"][data-col="${
-                thisPathFinder.squareIndexCol + 1
-              }"]`
-            );
-            if (
-              neighborSquare &&
-              !neighborSquare.classList.contains('clicked')
-            ) {
-              neighborSquare.classList.add('neighbour');
-            }
-          }
-          if (thisPathFinder.squareIndexRow - 1 >= 0) {
-            const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
-              `[data-row="${thisPathFinder.squareIndexRow - 1}"][data-col="${
-                thisPathFinder.squareIndexCol
-              }"]`
-            );
-            if (
-              neighborSquare &&
-              !neighborSquare.classList.contains('clicked')
-            ) {
-              neighborSquare.classList.add('neighbour');
-            }
-          }
-          if (thisPathFinder.squareIndexRow + 1 < thisPathFinder.rows) {
-            const neighborSquare = thisPathFinder.dom.wrapper.querySelector(
-              `[data-row="${thisPathFinder.squareIndexRow + 1}"][data-col="${
-                thisPathFinder.squareIndexCol
-              }"]`
-            );
-            if (
-              neighborSquare &&
-              !neighborSquare.classList.contains('clicked')
-            ) {
-              neighborSquare.classList.add('neighbour');
-            }
-          }
-        }
-      }
-    }
-  }
-
   initAction() {
     const thisPathFinder = this;
-    thisPathFinder.dom.btn.addEventListener('click', function () {
+    thisPathFinder.dom.button.addEventListener('click', function () {
       if (thisPathFinder.flag === 1) {
         const clickedSquares =
           thisPathFinder.dom.wrapper.querySelectorAll('.square.clicked');
@@ -329,17 +283,14 @@ class PathFinder {
         }
         thisPathFinder.flag = 2;
         thisPathFinder.dom.subtitle.textContent = 'Pick start and finish';
-        thisPathFinder.dom.btn.textContent = 'compute';
+        thisPathFinder.dom.button.textContent = 'compute';
         thisPathFinder.dom.clickedSquares =
           thisPathFinder.dom.wrapper.querySelectorAll('.square.clicked');
-        console.log(
-          'thisPathFinder.dom.clickedSquares',
-          thisPathFinder.dom.clickedSquares
-        );
+
         thisPathFinder.chooseStartEnd();
       } else if (thisPathFinder.flag === 4) {
         thisPathFinder.dom.subtitle.textContent = 'The best route is...';
-        thisPathFinder.dom.btn.textContent = 'statr again';
+        thisPathFinder.dom.button.textContent = 'start again';
         thisPathFinder.findShortestPath();
       } else if (thisPathFinder.flag === 5) {
         thisPathFinder.reset();
@@ -353,7 +304,6 @@ class PathFinder {
     for (let square of thisPathFinder.dom.clickedSquares) {
       square.addEventListener('click', function () {
         const clickedElement = this;
-        console.log('thisPathFinder.flag', thisPathFinder.flag);
         for (let square of thisPathFinder.dom.squares) {
           square.classList.remove('neighbour');
         }
@@ -362,7 +312,6 @@ class PathFinder {
           const startIndexRow = parseInt(square.getAttribute('data-row'));
           const startIndexCol = parseInt(square.getAttribute('data-col'));
           thisPathFinder.startPoint = `${startIndexRow}-${startIndexCol}`;
-          console.log('startPoint', thisPathFinder.startPoint);
 
           thisPathFinder.flag = 3;
         } else if (thisPathFinder.flag === 3) {
@@ -370,7 +319,6 @@ class PathFinder {
           const endIndexRow = parseInt(square.getAttribute('data-row'));
           const endIndexCol = parseInt(square.getAttribute('data-col'));
           thisPathFinder.endPoint = `${endIndexRow}-${endIndexCol}`;
-          console.log('endPoint', thisPathFinder.endPoint);
           thisPathFinder.flag = 4;
         }
       });
@@ -381,7 +329,6 @@ class PathFinder {
     const thisPathFinder = this;
     thisPathFinder.flag = 5;
     const queue = [{ node: thisPathFinder.startPoint, path: [] }];
-    console.log('queue', queue);
     const visited = new Set();
 
     while (queue.length > 0) {
@@ -397,7 +344,6 @@ class PathFinder {
           );
           square.className = 'square shortest';
         }
-        console.log('thisPathFinder.shortestPath', thisPathFinder.shortestPath);
         return thisPathFinder.shortestPath;
       }
 
@@ -425,7 +371,7 @@ class PathFinder {
     thisPathFinder.chooseSquares();
 
     thisPathFinder.dom.subtitle.textContent = 'Draw routes';
-    thisPathFinder.dom.btn.textContent = 'Finish drawning';
+    thisPathFinder.dom.button.textContent = 'Finish drawning';
   }
 }
 export default PathFinder;

@@ -5,17 +5,16 @@ const app = {
     const thisApp = this;
     thisApp.pages = document.querySelector('.container').children;
     thisApp.navLinks = document.querySelectorAll('nav a');
-    console.log('thisApp.navLinks', thisApp.navLinks);
-    const idFromHash = window.location.hash.replace('#/', '');
+    const hashId = window.location.hash.replace('#/', '');
 
-    let pageMAtchingHash = thisApp.pages[0].id;
+    let hashIdpageMatchingHash = thisApp.pages[0].id;
     for (let page of thisApp.pages) {
-      if (page.id == idFromHash) {
-        pageMAtchingHash = page.id;
+      if (page.id == hashId) {
+        hashIdpageMatchingHash = page.id;
         break;
       }
     }
-    thisApp.activatePage(pageMAtchingHash);
+    thisApp.activatePage(hashIdpageMatchingHash);
     for (let link of thisApp.navLinks) {
       link.addEventListener('click', function (event) {
         const clickedElement = this;
