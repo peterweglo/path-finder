@@ -106,6 +106,30 @@ class PathFinder {
       }
     }
   }
+
+  pathExist(startPoint, endPoint) {
+    const thisPathFinder = this;
+    const visited = new Set();
+    const queue = [startPoint];
+
+    while (queue.length > 0) {
+      const currentNode = queue.shift();
+
+      if (currentNode === endPoint) {
+        return true;
+      }
+
+      visited.add(currentNode);
+
+      for (const neighbour of thisPathFinder.copyOfGraph[currentNode]) {
+        if (!visited.has(neighbour)) {
+          queue.push(neighbour);
+        }
+      }
+    }
+    return false;
+  }
+
   chooseSquares() {
     const thisPathFinder = this;
     thisPathFinder.graph = {};
@@ -194,7 +218,7 @@ class PathFinder {
             }
 
             if (prevClickedSquareIndexRow >= 0) {
-              const neighborId = `${prevClickedSquareIndexRow}-${thisPathFinder.clickedSquareIndexCol}`;
+              const neighbourId = `${prevClickedSquareIndexRow}-${thisPathFinder.clickedSquareIndexCol}`;
               if (
                 thisPathFinder.dom.wrapper
                   .querySelector(
@@ -202,12 +226,12 @@ class PathFinder {
                   )
                   .classList.contains('clicked')
               ) {
-                thisPathFinder.graph[thisPathFinder.squareId].push(neighborId);
-                thisPathFinder.graph[neighborId].push(thisPathFinder.squareId);
+                thisPathFinder.graph[thisPathFinder.squareId].push(neighbourId);
+                thisPathFinder.graph[neighbourId].push(thisPathFinder.squareId);
               }
             }
             if (nextClickedSquareIndexRow < thisPathFinder.rows) {
-              const neighborId = `${nextClickedSquareIndexRow}-${thisPathFinder.clickedSquareIndexCol}`;
+              const neighbourId = `${nextClickedSquareIndexRow}-${thisPathFinder.clickedSquareIndexCol}`;
               if (
                 thisPathFinder.dom.wrapper
                   .querySelector(
@@ -215,12 +239,12 @@ class PathFinder {
                   )
                   .classList.contains('clicked')
               ) {
-                thisPathFinder.graph[thisPathFinder.squareId].push(neighborId);
-                thisPathFinder.graph[neighborId].push(thisPathFinder.squareId);
+                thisPathFinder.graph[thisPathFinder.squareId].push(neighbourId);
+                thisPathFinder.graph[neighbourId].push(thisPathFinder.squareId);
               }
             }
             if (prevClickedSquareIndexCol >= 0) {
-              const neighborId = `${thisPathFinder.clickedSquareIndexRow}-${prevClickedSquareIndexCol}`;
+              const neighbourId = `${thisPathFinder.clickedSquareIndexRow}-${prevClickedSquareIndexCol}`;
               if (
                 thisPathFinder.dom.wrapper
                   .querySelector(
@@ -228,12 +252,12 @@ class PathFinder {
                   )
                   .classList.contains('clicked')
               ) {
-                thisPathFinder.graph[thisPathFinder.squareId].push(neighborId);
-                thisPathFinder.graph[neighborId].push(thisPathFinder.squareId);
+                thisPathFinder.graph[thisPathFinder.squareId].push(neighbourId);
+                thisPathFinder.graph[neighbourId].push(thisPathFinder.squareId);
               }
             }
             if (nextClickedSquareIndexCol < thisPathFinder.cols) {
-              const neighborId = `${thisPathFinder.clickedSquareIndexRow}-${nextClickedSquareIndexCol}`;
+              const neighbourId = `${thisPathFinder.clickedSquareIndexRow}-${nextClickedSquareIndexCol}`;
               if (
                 thisPathFinder.dom.wrapper
                   .querySelector(
@@ -241,8 +265,8 @@ class PathFinder {
                   )
                   .classList.contains('clicked')
               ) {
-                thisPathFinder.graph[thisPathFinder.squareId].push(neighborId);
-                thisPathFinder.graph[neighborId].push(thisPathFinder.squareId);
+                thisPathFinder.graph[thisPathFinder.squareId].push(neighbourId);
+                thisPathFinder.graph[neighbourId].push(thisPathFinder.squareId);
               }
             }
           }
@@ -304,27 +328,87 @@ class PathFinder {
     }
   }
 
-  pathExist(startNode, endNode) {
+  findShortestPath(startPoint, endPoint) {
     const thisPathFinder = this;
+    thisPathFinder.flag = 5;
+    const queue = [{ node: startPoint, path: [] }];
     const visited = new Set();
-    const queue = [startNode];
 
     while (queue.length > 0) {
-      const currentNode = queue.shift();
+      const { node, path } = queue.shift();
 
-      if (currentNode === endNode) {
-        return true;
+      if (node === endPoint) {
+        thisPathFinder.shortestPath = path.concat(node);
+
+        for (const node of thisPathFinder.shortestPath) {
+          const [row, col] = node.split('-');
+          const square = thisPathFinder.dom.wrapper.querySelector(
+            `[data-row="${row}"][data-col="${col}"]`
+          );
+          square.className = 'square shortest';
+        }
+        return thisPathFinder.shortestPath;
       }
 
-      visited.add(currentNode);
+      if (!visited.has(node)) {
+        visited.add(node);
 
-      for (const neighbour of thisPathFinder.copyOfGraph[currentNode]) {
-        if (!visited.has(neighbour)) {
-          queue.push(neighbour);
+        for (const neighbour of thisPathFinder.graph[node]) {
+          if (!visited.has(neighbour)) {
+            queue.push({ node: neighbour, path: path.concat(node) });
+          }
         }
       }
     }
+
+    alert('The shortest path not found');
+
     return false;
+  }
+
+  findAllPaths(startPoint, endPoint, currentPath = []) {
+    const thisPathFinder = this;
+    currentPath.push(startPoint);
+
+    if (startPoint === endPoint) {
+      return [currentPath];
+    }
+
+    const paths = [];
+    const neighbours = thisPathFinder.graph[startPoint] || [];
+
+    for (const neighbour of neighbours) {
+      if (!currentPath.includes(neighbour)) {
+        const newPaths = thisPathFinder.findAllPaths(neighbour, endPoint, [
+          ...currentPath,
+        ]);
+        paths.push(...newPaths);
+      }
+    }
+
+    return paths;
+  }
+
+  summary() {
+    const thisPathFinder = this;
+    const allSquaresNumber = Object.keys(thisPathFinder.graph).length;
+    const shortestRouteLength = thisPathFinder.shortestPath.length;
+    const allPaths = thisPathFinder.findAllPaths(
+      thisPathFinder.startPoint,
+      thisPathFinder.endPoint
+    );
+    let longestPathLength = 0;
+    for (const path of allPaths) {
+      if (path.length > longestPathLength) {
+        longestPathLength = path.length;
+      }
+    }
+
+    alert(
+      `Full route: ${allSquaresNumber}
+      Shortest route: ${shortestRouteLength}
+      The longest route: ${longestPathLength}`
+    );
   }
 
   initAction() {
@@ -352,6 +436,7 @@ class PathFinder {
           thisPathFinder.startPoint,
           thisPathFinder.endPoint
         );
+        thisPathFinder.summary();
       } else if (thisPathFinder.flag === 5) {
         thisPathFinder.reset();
       }
@@ -385,43 +470,6 @@ class PathFinder {
     }
   }
 
-  findShortestPath(startPoint, endPoint) {
-    const thisPathFinder = this;
-    thisPathFinder.flag = 5;
-    const queue = [{ node: startPoint, path: [] }];
-    const visited = new Set();
-
-    while (queue.length > 0) {
-      const { node, path } = queue.shift();
-
-      if (node === endPoint) {
-        thisPathFinder.shortestPath = path.concat(node);
-
-        for (const node of thisPathFinder.shortestPath) {
-          const [row, col] = node.split('-');
-          const square = thisPathFinder.dom.wrapper.querySelector(
-            `[data-row="${row}"][data-col="${col}"]`
-          );
-          square.className = 'square shortest';
-        }
-        return thisPathFinder.shortestPath;
-      }
-
-      if (!visited.has(node)) {
-        visited.add(node);
-
-        for (const neighbor of thisPathFinder.graph[node]) {
-          if (!visited.has(neighbor)) {
-            queue.push({ node: neighbor, path: path.concat(node) });
-          }
-        }
-      }
-    }
-
-    alert('The shortest path not found');
-
-    return false;
-  }
   reset() {
     const thisPathFinder = this;
     thisPathFinder.flag = 0;
