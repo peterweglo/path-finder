@@ -11,6 +11,7 @@
     background-color: rgba(0, 0, 0, 0.7);
     z-index: 3;
   }
+
   .modal {
     position: absolute;
     top: 50%;
@@ -45,6 +46,7 @@
         font-weight: 700;
         color: $color-path;
       }
+
       .number-shortest {
         font-weight: 700;
         color: green;

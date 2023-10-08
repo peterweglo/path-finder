@@ -36,11 +36,11 @@
     }
 
     .square.clicked.start {
-      background-color: green;
+      background-color: $color-path-shortest;
     }
 
     .square.clicked.end {
-      background-color: red;
+      background-color: $color-path-end;
     }
 
     .square.neighbour {
@@ -49,7 +49,7 @@
     }
 
     .square.shortest {
-      background-color: aqua;
+      background-color: $color-path-shortest;
     }
   }
 
@@ -71,6 +71,54 @@
       color: $color-light;
       border: none;
       cursor: pointer;
+    }
+  }
+
+  .mobile {
+    display: none;
+  }
+}
+
+@media (max-width: 575px) {
+  .finder-page {
+    .deskop {
+      display: none;
+    }
+
+    .mobile {
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, 50%);
+      z-index: 4;
+
+      h3 {
+        font-size: 24px;
+        text-align: center;
+      }
+    }
+  }
+}
+
+@media (max-height: 415px) {
+  .finder-page {
+    .deskop {
+      display: none;
+    }
+
+    .mobile {
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, 50%);
+      z-index: 4;
+
+      h3 {
+        font-size: 24px;
+        text-align: center;
+      }
     }
   }
 }

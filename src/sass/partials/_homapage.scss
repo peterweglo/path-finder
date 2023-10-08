@@ -7,10 +7,10 @@
 
   .image-1 {
     position: absolute;
-    bottom: -150px;
+    bottom: -100px;
     left: 10%;
-    width: 40%;
-    height: 500px;
+    width: 630px;
+    height: 420px;
     background-image: url('/images/1.jpg');
     background-position: center;
     background-size: cover;
@@ -18,7 +18,7 @@
 
     .image-text-1 {
       position: absolute;
-      top: 60%;
+      top: 62%;
       right: 0;
       transform: translateX(50%);
     }
@@ -26,10 +26,10 @@
 
   .image-2 {
     position: absolute;
-    bottom: -750px;
+    bottom: -600px;
     right: 10%;
-    width: 60%;
-    height: 550px;
+    width: 800px;
+    height: 420px;
     background-image: url('/images/2.jpg');
     background-position: center;
     background-size: cover;
@@ -40,6 +40,116 @@
       bottom: 60%;
       left: 0;
       transform: translateX(-50%);
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .about-page {
+    .image-1 {
+      bottom: -100px;
+      left: 10%;
+      width: 570px;
+      height: 380px;
+    }
+
+    .image-2 {
+      width: 680px;
+      height: 360px;
+      right: 11%;
+
+      .image-text-2 {
+        transform: translateX(-30%);
+      }
+    }
+  }
+}
+
+@media (max-width: 991px) {
+  .about-page {
+    .image-1 {
+      width: 500px;
+      height: 330px;
+
+      .image-text-1 {
+        transform: translateX(30%);
+      }
+    }
+
+    .image-2 {
+      bottom: -500px;
+      width: 600px;
+      height: 320px;
+      right: 15%;
+
+      .image-text-2 {
+        bottom: 60%;
+        left: 5%;
+        transform: translateX(0);
+      }
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .about-page {
+    .image-1 {
+      width: 80%;
+      height: 50%;
+      left: 10%;
+
+      .image-text-1 {
+        transform: translateX(0%);
+        left: 5%;
+        top: 50%;
+      }
+    }
+
+    .image-2 {
+      bottom: -80vh;
+      width: 80%;
+      height: 50%;
+      right: 10%;
+
+      .image-text-2 {
+        bottom: 45%;
+        left: 5%;
+        transform: translateX(0);
+      }
+    }
+  }
+}
+
+@media (max-height: 415px) {
+  .about-page {
+    .image-1 {
+      height: 250px;
+    }
+
+    .image-2 {
+      height: 250px;
+      bottom: -100vh;
+
+      .image-text-2 {
+        bottom: 40%;
+      }
+    }
+  }
+}
+
+@media (max-height: 320px) {
+  .about-page {
+    .image-1 {
+      height: 200px;
+    }
+
+    .image-2 {
+      height: 200px;
+      bottom: -120vh;
+
+      .image-text-2 {
+        bottom: 40%;
+      }
     }
   }
 }
