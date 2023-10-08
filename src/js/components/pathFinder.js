@@ -391,24 +391,22 @@ class PathFinder {
 
   summary() {
     const thisPathFinder = this;
-    const allSquaresNumber = Object.keys(thisPathFinder.graph).length;
-    const shortestRouteLength = thisPathFinder.shortestPath.length;
+    thisPathFinder.allSquaresNumber = Object.keys(thisPathFinder.graph).length;
+    thisPathFinder.shortestRouteLength = thisPathFinder.shortestPath.length;
     const allPaths = thisPathFinder.findAllPaths(
       thisPathFinder.startPoint,
       thisPathFinder.endPoint
     );
-    let longestPathLength = 0;
+    thisPathFinder.longestPathLength = 0;
     for (const path of allPaths) {
-      if (path.length > longestPathLength) {
-        longestPathLength = path.length;
+      if (path.length > thisPathFinder.longestPathLength) {
+        thisPathFinder.longestPathLength = path.length;
       }
     }
 
-    alert(
-      `Full route: ${allSquaresNumber}
-      Shortest route: ${shortestRouteLength}
-      The longest route: ${longestPathLength}`
-    );
+    // alert(
+    //   ` Full route: ${thisPathFinder.allSquaresNumber}\n Shortest route: ${thisPathFinder.shortestRouteLength}\n The longest route: ${thisPathFinder.longestPathLength}`
+    // );
   }
 
   initAction() {
@@ -437,6 +435,7 @@ class PathFinder {
           thisPathFinder.endPoint
         );
         thisPathFinder.summary();
+        thisPathFinder.modal();
       } else if (thisPathFinder.flag === 5) {
         thisPathFinder.reset();
       }
@@ -468,6 +467,24 @@ class PathFinder {
         }
       });
     }
+  }
+
+  modal() {
+    const thisPathFinder = this;
+    document.querySelector('.modal-wrap').classList.add('active');
+    document.querySelector(
+      '.modal-text .full'
+    ).textContent = ` Full route: ${thisPathFinder.allSquaresNumber} fields`;
+    document.querySelector(
+      '.modal-text .shortest'
+    ).textContent = `Shortest route: ${thisPathFinder.shortestRouteLength} fields`;
+    document.querySelector(
+      '.modal-text .longest'
+    ).textContent = `The longest route: ${thisPathFinder.longestPathLength} fields`;
+
+    document.querySelector('span.hide').addEventListener('click', function () {
+      document.querySelector('.modal-wrap').classList.remove('active');
+    });
   }
 
   reset() {

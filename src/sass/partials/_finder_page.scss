@@ -74,3 +74,54 @@
     }
   }
 }
+
+.modal-wrap {
+  display: none;
+}
+
+.modal-wrap.active {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 3;
+}
+
+.modal-wrap.active .modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 60%;
+  border: 2px solid black;
+  background-color: white;
+}
+
+.modal-heading h3 {
+  text-align: center;
+  color: black;
+  padding: 5vh;
+}
+
+.modal-text {
+  color: black;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: center;
+  width: 100%;
+}
+
+span {
+  position: absolute;
+  top: 2vh;
+  right: 3vh;
+  color: black;
+  font-size: 30px;
+  line-height: 30px;
+  cursor: pointer;
+}
