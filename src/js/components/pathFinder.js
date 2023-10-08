@@ -473,14 +473,14 @@ class PathFinder {
     const thisPathFinder = this;
     document.querySelector('.modal-wrap').classList.add('active');
     document.querySelector(
-      '.modal-text .full'
-    ).textContent = ` Full route: ${thisPathFinder.allSquaresNumber} fields`;
+      '.modal-text .full .number'
+    ).textContent = `${thisPathFinder.allSquaresNumber}`;
     document.querySelector(
-      '.modal-text .shortest'
-    ).textContent = `Shortest route: ${thisPathFinder.shortestRouteLength} fields`;
+      '.modal-text .shortest .number-shortest'
+    ).textContent = `${thisPathFinder.shortestRouteLength}`;
     document.querySelector(
-      '.modal-text .longest'
-    ).textContent = `The longest route: ${thisPathFinder.longestPathLength} fields`;
+      '.modal-text .longest .number'
+    ).textContent = `${thisPathFinder.longestPathLength}`;
 
     document.querySelector('span.hide').addEventListener('click', function () {
       document.querySelector('.modal-wrap').classList.remove('active');
