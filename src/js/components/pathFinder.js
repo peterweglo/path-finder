@@ -1,3 +1,5 @@
+import { select } from '../settings.js';
+
 class PathFinder {
   constructor() {
     const thisPathFinder = this;
@@ -403,10 +405,6 @@ class PathFinder {
         thisPathFinder.longestPathLength = path.length;
       }
     }
-
-    // alert(
-    //   ` Full route: ${thisPathFinder.allSquaresNumber}\n Shortest route: ${thisPathFinder.shortestRouteLength}\n The longest route: ${thisPathFinder.longestPathLength}`
-    // );
   }
 
   initAction() {
@@ -471,20 +469,22 @@ class PathFinder {
 
   modal() {
     const thisPathFinder = this;
-    document.querySelector('.modal-wrap').classList.add('active');
+    document.querySelector(select.modal.wrapper).classList.add('active');
     document.querySelector(
-      '.modal-text .full .number'
+      select.modal.fullNumber
     ).textContent = `${thisPathFinder.allSquaresNumber}`;
     document.querySelector(
-      '.modal-text .shortest .number-shortest'
+      select.modal.numberShortest
     ).textContent = `${thisPathFinder.shortestRouteLength}`;
     document.querySelector(
-      '.modal-text .longest .number'
+      select.modal.numberLongest
     ).textContent = `${thisPathFinder.longestPathLength}`;
 
-    document.querySelector('span.hide').addEventListener('click', function () {
-      document.querySelector('.modal-wrap').classList.remove('active');
-    });
+    document
+      .querySelector(select.modal.hide)
+      .addEventListener('click', function () {
+        document.querySelector(select.modal.wrapper).classList.remove('active');
+      });
   }
 
   reset() {
